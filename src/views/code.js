@@ -1,18 +1,23 @@
 
-import { ContactSchema } from './../models/model';
-import { addNewContact } from './../controllers/controller';
-$(function(){
+
+$(function() {
+    
     var $contacts = $('#contacts');
-    var $fname = $('fname');
+    var id=$('#id')
+    var $fname = $('#fname');
     var $lname = $('#lname');
-    var $email = $('email');
-$.ajax({
-    type: 'Get',
-    url:'localhost:3000/contact',
-    success: function(contacts) {
-        console.log('success', contacts);
-        $.each(contact, function(i, contact){
-            $contacts.append('<li>contact #'+i+ 'First Name:',contact.$fname+'</li>');
+    var $phone = $('#phone');
+    var $company = $('#cname')
+    var $email = $('#email');
+    
+$.ajax({    
+    type: 'GET',
+    url:'/contact',
+    success: function(data) {
+        console.log('success', data);
+        $.each(data, function(i, con){
+            $contacts.append('<li>contact #'+i+ ' First Name: '+con.firstName+' Last Name: '+ con.lastName + 'Phone #:  '+con.phone + 'Company '+con.company+
+            ' email '+con.email+'<button id="del-contact">delete!</button>'+'</li>');
            
         });
 
@@ -23,23 +28,27 @@ $.ajax({
     });
     $('#add-contact').on('click', function(){
         var contact ={
-            lastName = $lname.val(),
-            firstName = $fname.val(),
+            firstName: $fname.val(),
+            lastName: $lname.val(),
+            company: $company.val(),
+            phone: $phone.val(),
+            email: $email.val()
         };
         $.ajax({
-            type: 'Post',
-            url: 'http://localhost:3000/contact',
+            type: 'POST',
+            url: '/contact',
             data: contact,
-            success: function(newContact){
-                $contacts.append('<li>contact #'+i+ 'First Name:',contact.$fname+'</li>');
-
+            success: function(){
+                $contacts.append('<li> First Name:'+contact.firstName+' Last Name '+ contact.lastName+ 'Company '+contact.company +' email '+contact.email +
+               'Phone # '+contact.phone  +'</li>')
             },
             error: function(){
                 alert('error saving contact');
             }
             
         })
+       
+
     })
-   
 
 });
